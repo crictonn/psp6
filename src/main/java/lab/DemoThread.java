@@ -11,7 +11,7 @@ import javax.swing.*;
 public class DemoThread extends JFrame{
     private BufferedImage buffCanon, buffCannonball, buffTarget, buffExplosion;
     private Random randomTarget;
-    private int cannonBallXPosition = 175; //Сделать 200, чтобы была красиво появлялся из пушки
+    private int cannonBallXPosition = 250; //Сделать 250, чтобы была красиво появлялся из пушки
 
     static JButton shootButton = new JButton("Shoot!");
     public DemoThread(){
@@ -28,6 +28,7 @@ public class DemoThread extends JFrame{
 
         content.add(new Canon(), BorderLayout.EAST);
         content.add(new Target(), BorderLayout.WEST);
+        //content.add(new Explosion(), BorderLayout.WEST);
         content.add(new CannonBall(), BorderLayout.CENTER);
         content.add(shootButton, BorderLayout.SOUTH);
 
@@ -60,7 +61,7 @@ public class DemoThread extends JFrame{
     }
 
     public class Target extends JPanel{
-        private boolean status = false;
+        private boolean status = true;
         public Target(){
             setPreferredSize(new Dimension(150, 400));
             try{
@@ -89,19 +90,21 @@ public class DemoThread extends JFrame{
         protected void paintComponent(Graphics graphics){
             super.paintComponent(graphics);
             Graphics2D graphics2D = (Graphics2D) graphics;
-            if(status){
-                graphics2D.drawImage(buffTarget,25,250,0,0,this);
+            if (status) {
+                graphics2D.drawImage(buffTarget, 50, 275, 0, 0, this);
                 status = false;
-            }else{
-                graphics2D.drawImage(buffTarget,25,250,100,100,this);
+            } else{
+                graphics2D.drawImage(buffTarget,50,275,100,100,this);
                 status = true;
             }
+
+            }
         }
-    }
+
 
     public class CannonBall extends JPanel{
         public CannonBall(){
-            setPreferredSize(new Dimension(500, 500));//Вот здесь оно как будто не нужно, из-за того, что центер автоматически выравнивается по EAST и WEST
+//            setPreferredSize(new Dimension(500, 500));//Вот здесь оно как будто не нужно, из-за того, что центр автоматически выравнивается по EAST и WEST
             try{
                 buffCannonball = ImageIO.read(new File("C://Users/devic/IdeaProjects/psp6/src/main/resources/cannonball.png"));
             } catch (IOException e){
@@ -111,7 +114,7 @@ public class DemoThread extends JFrame{
                 @Override
                 public void run() {
                     while(true){
-                        cannonBallXPosition--;
+                        cannonBallXPosition-=2;
                         repaint();
                         try {
                             Thread.sleep(1);
@@ -130,10 +133,33 @@ public class DemoThread extends JFrame{
         }
    }
 
-    public class ShotPerformed implements ActionListener{
-        @Override
-        public void actionPerformed(ActionEvent e) {
+//   public class Explosion extends JPanel{
+//        public Explosion(){
+//            try{
+//                buffExplosion = ImageIO.read(new File("C://Users/devic/IdeaProjects/psp6/src/main/resources/explosion.png"));
+//            } catch (IOException e){
+//                e.printStackTrace();
+//            }
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    while(true){
+//                            repaint();
+//                    }
+//                }
+//            }).start();
+//        }
+//       @Override
+//       protected void paintComponent(Graphics graphics){
+//           super.paintComponent(graphics);
+//           Graphics2D graphics2D = (Graphics2D) graphics;
+//               graphics2D.drawImage(buffExplosion,0,0,100,100,this);
+//       }
+//   }
 
+    public class ShotPerformed implements ActionListener{
+        public void actionPerformed(ActionEvent e) {
+            cannonBallXPosition = 200; //Дешевое решение, возвращает шар в изначальное положение
         }
     }
 
